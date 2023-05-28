@@ -131,7 +131,7 @@ def game
     position = gets.chomp.to_i
     while position.negative? || position > 8 || board.place_mark(current_player.mark, position) == false
       print "Invalid input, number too low/high or this position is already taken!\n"
-     sleep(1)
+      sleep(1)
       print "Input again, #{current_player.name}: "
       position = gets.chomp.to_i
     end
