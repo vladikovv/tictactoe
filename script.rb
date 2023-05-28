@@ -10,9 +10,11 @@ class Board
     coords = get_coords_from_position(position)
     first_coord = coords[0]
     second_coord = coords[1]
-    return false unless square_not_set?(coords)
+    if square_not_set?(coords)
+      @board[first_coord][second_coord] = mark
+    else return false
 
-    @board[first_coord][second_coord] = mark
+    end
   end
 
   def pretty_print_board
@@ -46,17 +48,19 @@ class Board
     false
   end
 
+  def square_not_set?(coords)
+    first_coord = coords[0]
+    second_coord = coords[1]
+    @board[first_coord][second_coord].is_a?(Integer)
+  end
+
+
   private
 
   def get_coords_from_position(position)
     @coords_array[position]
   end
 
-  def square_not_set?(coords)
-    first_coord = coords[0]
-    second_coord = coords[1]
-    @board[first_coord][second_coord].is_a?(Integer)
-  end
 
   def right_diagonal_values
     result = []
@@ -124,8 +128,13 @@ def game
   moves_count = 0
   until game_over
     print("#{current_player.name} (#{current_player.mark} player), pick a position on the board to place your mark: ")
-    position = -1
-    position = gets.chomp.to_i while position.negative? || position > 8
+    position = gets.chomp.to_i
+    while position.negative? || position > 8 || board.place_mark(current_player.mark, position) == false
+      print "Invalid input, number too low/high or this position is already taken!\n"
+     sleep(1)
+      print "Input again, #{current_player.name}: "
+      position = gets.chomp.to_i
+    end
     board.place_mark(current_player.mark, position)
     moves_count += 1
     board.pretty_print_board
